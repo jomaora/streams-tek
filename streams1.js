@@ -58,10 +58,10 @@ new AlphabetReadable()
 		objectMode: true,
 		transform(chunk, encoding, cb) {
 			// si je veux juste envoyer un seul element transformé
-			cb(null, chunk.toUpperCase());
+			//(null, chunk.toUpperCase());
 			// si je veux envoyer plusiers element à la fois on appele this.push
-			//this.push('_' + chunk + '_')
-			//cb(null, chunk.toUpperCase());
+			this.push(chunk)
+			cb(null, chunk.toUpperCase());
 		}
 	}))
 	.pipe(new ChuckTrandorm())
