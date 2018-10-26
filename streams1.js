@@ -34,17 +34,37 @@ class AlphabetReadable extends Readable {
 	}
 }
 
+class ChuckTrandorm extends Transform {
+	constructor() {
+		super({
+			objectMode: true,
+			//highWaterMark
+		});
+		this.buffer = [];
+	}
+
+	_transform(chunk, encoding, cb) {
+		this.buffer.push((chunk));
+		if (this.buffer.length == 2) {
+			this.push(this.buffer);
+			this.buffer = [];
+		}
+		cb();
+	}
+}
+
 new AlphabetReadable()
 	.pipe(new Transform({
 		objectMode: true,
 		transform(chunk, encoding, cb) {
 			// si je veux juste envoyer un seul element transformé
-			//cb(null, chunk.toUpperCase());
-			// si je veux envoyer plusiers element à la fois on appele this.push
-			this.push('_' + chunk + '_')
 			cb(null, chunk.toUpperCase());
+			// si je veux envoyer plusiers element à la fois on appele this.push
+			//this.push('_' + chunk + '_')
+			//cb(null, chunk.toUpperCase());
 		}
 	}))
+	.pipe(new ChuckTrandorm())
 	.pipe(new Writable({
 		objectMode: true,
 		write(chunk, encoding, cb) {
