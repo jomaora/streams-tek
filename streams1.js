@@ -54,11 +54,12 @@ class ChuckTrandorm extends Transform {
 
 	// il est appelé quand il sait que son Readable a émis un null
 	_flush(cb) {
+		throw new Error('yolo');
 		cb(null, this.buffer);
 	}
 }
 
-new AlphabetReadable()
+/*new AlphabetReadable()
 	.pipe(new Transform({
 		objectMode: true,
 		transform(chunk, encoding, cb) {
@@ -70,6 +71,7 @@ new AlphabetReadable()
 		}
 	}))
 	.pipe(new ChuckTrandorm())
+	// Pour le erreurs c'est mieux de mettre un .on('error' après chaque pipe
 	.pipe(new Writable({
 		objectMode: true,
 		write(chunk, encoding, cb) {
@@ -77,3 +79,27 @@ new AlphabetReadable()
 			cb();
 		}
 	}));
+*/
+
+pipeline(
+	new AlphabetReadable(),
+	new Transform({
+		objectMode: true,
+		transform(chunk, encoding, cb) {
+			this.push(chunk)
+			cb(null, chunk.toUpperCase());
+		}
+	}),
+	new ChuckTrandorm(),
+	// un seul writable par pipeline
+	new Writable({
+		objectMode: true,
+		write(chunk, encoding, cb) {
+			console.log(chunk.toString());
+			cb();
+		}
+	}),
+	err => {
+		console.log(err);
+	}
+);
