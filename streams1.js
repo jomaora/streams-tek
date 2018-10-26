@@ -45,7 +45,7 @@ class ChuckTrandorm extends Transform {
 
 	_transform(chunk, encoding, cb) {
 		this.buffer.push((chunk));
-		if (this.buffer.length == 2) {
+		if (this.buffer.length == 10) {
 			this.push(this.buffer);
 			this.buffer = [];
 		}
