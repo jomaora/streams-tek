@@ -51,6 +51,11 @@ class ChuckTrandorm extends Transform {
 		}
 		cb();
 	}
+
+	// il est appelé quand il sait que son Readable a émis un null
+	_flush(cb) {
+		cb(null, this.buffer);
+	}
 }
 
 new AlphabetReadable()
